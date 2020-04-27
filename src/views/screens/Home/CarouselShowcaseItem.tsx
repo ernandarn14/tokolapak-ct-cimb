@@ -38,7 +38,7 @@ const CarouselShowcaseItem = ({
                 sekali pandang. Dengan iPhone X, visi ini menjadi kenyataan.
                 Selamat datang, masa depan.
               </p>
-              <ButtonUI
+              <ButtonUI onClick=""
                 type="outlined"
                 className="mt-5"
                 style={{
