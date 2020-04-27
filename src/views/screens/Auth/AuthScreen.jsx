@@ -54,7 +54,6 @@ class AuthScreen extends React.Component {
             password: passLogin
         }
         this.props.onLogin(userData)
-        swal('Selamat', 'Login berhasil', 'success')
     }
 
 
