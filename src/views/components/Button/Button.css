@@ -74,7 +74,7 @@
   box-sizing: border-box;
 }
 
-.custom-btn-auth:active{
+.custom-btn-auth.active{
   background-color: #373F41;
   color: #FFFFFF;
 }

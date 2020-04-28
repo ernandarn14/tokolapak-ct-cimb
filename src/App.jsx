@@ -7,8 +7,15 @@ import "bootstrap/dist/css/bootstrap.css";
 import Home from "./views/screens/Home/Home";
 import Navbar from "./views/components/Navbar/Navbar";
 import AuthScreen from "./views/screens/Auth/AuthScreen";
+import Cookie from 'universal-cookie'
+
+const cookieObject = new Cookie()
 
 class App extends React.Component {
+componentDidMount(){
+
+}
+
   render() {
     return (
       <>
