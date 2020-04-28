@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Carousel, CarouselControl, CarouselItem } from "reactstrap";
+import Axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faShippingFast,
@@ -9,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./Home.css";
 
-import ProductCard from "../../components/Cards/ProductCard.tsx";
+import ProductCard from "../../components/Cards/ProductCard";
 
 import iPhoneX from "../../../assets/images/Showcase/iPhone-X.png";
 import iPhone8 from "../../../assets/images/Showcase/iPhone-8.png";
@@ -17,7 +18,6 @@ import iPadPro from "../../../assets/images/Showcase/iPad-Pro.png";
 import ButtonUI from "../../components/Button/Button";
 import CarouselShowcaseItem from "./CarouselShowcaseItem.tsx";
 import Colors from "../../../constants/Colors";
-import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 
 const dummy = [
@@ -123,7 +123,7 @@ class Home extends React.Component {
 
   renderProducts = () => {
     return this.state.bestSellerData.map(val => {
-      return <ProductCard className="m-2" />
+      return <ProductCard className="m-2" data={val} />
     })
   }
 
