@@ -1,4 +1,6 @@
-import userTypes from "../types/user"
+import userTypes from "../types/user";
+
+const { ON_LOGIN_FAIL, ON_LOGIN_SUCCESS, ON_LOGOUT_SUCCESS } = userTypes;
 
 const init_state = {
   id: 0,
@@ -7,12 +9,8 @@ const init_state = {
   address: {},
   role: "",
   errMsg: "",
-  cookieChecked: false
+  cookieChecked: false,
 };
-
-
-
-const { ON_LOGIN_SUCCESS, ON_LOGIN_FAIL, ON_LOGOUT_SUCCESS, ON_REGISTER_FAIL } = userTypes
 
 export default (state = init_state, action) => {
   switch (action.type) {
@@ -24,16 +22,17 @@ export default (state = init_state, action) => {
         fullName,
         role,
         id,
-        cookieChecked: true
+        cookieChecked: true,
       };
     case ON_LOGIN_FAIL:
-      return { ...state, errMsg: action.payload, cookieChecked: true }
+      return { ...state, errMsg: action.payload, cookieChecked: true };
+    case "ON_REGISTER_FAIL":
+      return { ...state, errMsg: action.payload, cookieChecked: true };
     case ON_LOGOUT_SUCCESS:
-      return { init_state, cookieChecked: true }
-    case ON_REGISTER_FAIL:
-      return { ...state, errMsg: action.payload, cookieChecked: true }
-    default:
+      return { ...init_state, cookieChecked: true };
+    case "COOKIE_CHECK":
       return { ...state, cookieChecked: true };
+    default:
+      return { ...state };
   }
-
 };

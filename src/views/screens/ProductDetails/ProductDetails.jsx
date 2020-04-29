@@ -20,7 +20,7 @@ class ProductDetails extends React.Component {
     }
 
     addToCartHandler = () => {
-        Axios.post(`${API_URL}/cart`, {
+        Axios.post(`${API_URL}/carts`, {
             userId: this.props.user.id,
             productId: this.state.productList.id,
             quantity: 1
@@ -35,7 +35,7 @@ class ProductDetails extends React.Component {
     }
     componentDidMount() {
         // const { productList: [] } = this.state;
-        Axios.get(`${API_URL}/products/${this.props.match.params.id}`)
+        Axios.get(`${API_URL}/products/${this.props.match.params.productId}`)
             .then((res) => {
                 console.log(res)
                 this.setState({ productList: res.data })
