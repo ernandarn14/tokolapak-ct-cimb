@@ -3,15 +3,17 @@ import { connect } from "react-redux";
 import "./Cart.css";
 import { Link } from "react-router-dom";
 
+import { Table, Alert } from "reactstrap";
+
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import ButtonUI from "../../components/Button/Button";
-import { Alert } from 'reactstrap'
 
 
 class Cart extends React.Component {
     state = {
         cartList: [],
+        isCheckOut: false
     }
     componentDidMount() {
         this.getItemCarts()
@@ -62,39 +64,48 @@ class Cart extends React.Component {
             })
     }
 
-    render() {
-        if (this.state.cartList > 0) {
-            return (
-                <div className="container" >
-                    <h1>Cart Details</h1> <br />
-                    <h5>Username: {this.props.user.username}</h5>
-                    <table className="table table-striped text-center align-item-center">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Product Name</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Image</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.renderCarts()}
-                        </tbody>
-                    </table>
-                </div>
-            )
-        } else {
-            return (
-                <div className="container mt-5">
-                    <Alert>Cart Kosong
-                <Link to="/"> Silahkan Belanja</Link>
-                    </Alert>
-                </div>
-            )
-        }
+    checkOutHandler = () => {
+      Axios.post(`${API_URL}/transactions`, {
+        params: {
+            userId: this.props.user.id,
+            _expand: "product",
+        },
+    })
+        .then((res) => {
+            console.log(res.data);
+            this.setState({ cartList: res.data })
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
+
+     render() {
+    return (
+      <div className="container py-4">
+        {this.state.cartList.length > 0 ? (
+          <Table>
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Image</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>{this.renderCarts()}</tbody>
+          </Table>
+        ) : (
+          <Alert>
+            Your cart is empty! <Link to="/">Go shopping</Link>
+          </Alert>
+        )}
+         <ButtonUI className="ml-4" type="outlined">Check Out</ButtonUI>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {

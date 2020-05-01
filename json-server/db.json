@@ -26,7 +26,7 @@
     {
       "productName": "iPhone 7 +",
       "price": 5000000,
-      "category": "Phone",
+      "category": "Tab",
       "image": "https://ibox.co.id/media/wysiwyg/PromoOnline/web-banner---iphone-7-plus-rev.png",
       "desc": "HP Terbaikk loh",
       "id": 1
@@ -58,16 +58,22 @@
   ],
   "carts": [
     {
-      "userId": 2,
-      "productId": 2,
-      "quantity": 1,
+      "userId": 1,
+      "productId": 1,
+      "quantity": 2,
       "id": 1
     },
     {
-      "userId": 2,
+      "userId": 1,
       "productId": 2,
       "quantity": 1,
       "id": 2
+    },
+    {
+      "userId": 1,
+      "productId": 3,
+      "quantity": 2,
+      "id": 3
     }
   ]
 }

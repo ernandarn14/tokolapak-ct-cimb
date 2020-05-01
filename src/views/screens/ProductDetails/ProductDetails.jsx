@@ -5,10 +5,10 @@ import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import { connect } from "react-redux";
 import swal from 'sweetalert'
+import cart from '../../../redux/reducers/cart';
 
 class ProductDetails extends React.Component {
     state = {
-        // productList: [],
         productList: {
             image: "",
             productName: "",
@@ -16,23 +16,52 @@ class ProductDetails extends React.Component {
             desc: "",
             category: "",
             id: 0
+        },
+        cartList: {
+            userId: "",
+            productId: "",
+            quantity: "",
         }
     }
 
     addToCartHandler = () => {
-        Axios.post(`${API_URL}/carts`, {
-            userId: this.props.user.id,
-            productId: this.state.productList.id,
-            quantity: 1
-        })
-            .then(res => {
-                console.log(res)
-                swal('Selamat', 'Item berhasil ditambah di Add To Cart', 'success')
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
+        // POST method ke /cart
+        // Isinya: userId, productId, quantity
+        // console.log(this.props.user.id);
+        Axios.get(`${API_URL}/carts`, {
+            params: {
+                userId: this.props.user.id,
+                productId: this.state.productList.id
+            }
+        }).then(res => {
+            if (res.data.length > 0) {
+                Axios.patch(`${API_URL}/carts/${res.data[0].id}`, {
+                    quantity: res.data[0].quantity + 1
+                })
+                    .then(res => {
+                        console.log(res);
+                        swal('Selamat', 'Item berhasil ditambah di Add To Cart', 'success')
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                Axios.post(`${API_URL}/carts`, {
+                    userId: this.props.user.id,
+                    productId: this.state.productList.id,
+                    quantity: 1
+                })
+                    .then(res => {
+                        console.log(res);
+                        swal('Selamat', 'Item berhasil ditambah di Add To Cart', 'success')
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
+        });
+    };
+
     componentDidMount() {
         // const { productList: [] } = this.state;
         Axios.get(`${API_URL}/products/${this.props.match.params.productId}`)

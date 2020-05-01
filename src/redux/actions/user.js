@@ -3,7 +3,7 @@ import { API_URL } from "../../constants/API";
 import Cookie from "universal-cookie";
 import userTypes from "../types/user";
 
-const { ON_LOGIN_FAIL, ON_LOGIN_SUCCESS, ON_LOGOUT_SUCCESS } = userTypes;
+const { ON_LOGIN_FAIL, ON_LOGIN_SUCCESS, ON_LOGOUT_SUCCESS, ON_FILTER_SUCCESS } = userTypes;
 
 const cookieObj = new Cookie();
 
@@ -64,7 +64,7 @@ export const userKeepLogin = (userData) => {
 };
 
 export const logoutHandler = () => {
-  cookieObj.remove("authData");
+  cookieObj.remove("authData", { path: "/" });
   return {
     type: ON_LOGOUT_SUCCESS,
   };
@@ -84,7 +84,7 @@ export const registerHandler = (userData) => {
             payload: "Username sudah digunakan",
           });
         } else {
-          Axios.post(`${API_URL}/users`, {...userData, role: "user"})
+          Axios.post(`${API_URL}/users`, { ...userData, role: "user" })
             .then((res) => {
               console.log(res.data);
               dispatch({
@@ -108,3 +108,10 @@ export const cookieChecker = () => {
     type: "COOKIE_CHECK",
   };
 };
+
+export const filterHandler = (text) => {
+  return {
+      type: ON_FILTER_SUCCESS,
+      payload: text,
+  }
+}
