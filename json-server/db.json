@@ -13,11 +13,18 @@
       "fullName": "test1",
       "role": "user",
       "id": 2
+    },
+    {
+      "username": "admin",
+      "password": "123",
+      "fullName": "super admin",
+      "role": "admin",
+      "id": 3
     }
   ],
   "products": [
     {
-      "productName": "iPhone 7 Plus",
+      "productName": "iPhone 7 +",
       "price": 5000000,
       "category": "Phone",
       "image": "https://ibox.co.id/media/wysiwyg/PromoOnline/web-banner---iphone-7-plus-rev.png",
@@ -27,7 +34,7 @@
     {
       "productName": "iPad Pro 3",
       "price": 15000000,
-      "category": "Tablet",
+      "category": "Tab",
       "image": "https://ibox.co.id/media/catalog/product/cache/3/image/9df78eab33525d08d6e5fb8d27136e95/i/p/ipad-pro-11-select-cell-spacegray-201810.png",
       "desc": "HP Terbaikk loh",
       "id": 2
@@ -39,6 +46,14 @@
       "image": "https://ibox.co.id/media/catalog/product/cache/3/image/9df78eab33525d08d6e5fb8d27136e95/m/b/mbp15touch-silver-select-cto-201807_3_1.jpeg",
       "desc": "HP Terbaikk loh",
       "id": 3
+    },
+    {
+      "productName": "IMac Pro 2019",
+      "price": "20000000",
+      "category": "Dekstop",
+      "image": "https://ibox.co.id/media/wysiwyg/iMacPro/imac-pro_01-min.png",
+      "desc": "Mahal gaes ini ",
+      "id": 5
     }
   ],
   "carts": [
@@ -53,18 +68,6 @@
       "productId": 2,
       "quantity": 1,
       "id": 2
-    },
-    {
-      "userId": 1,
-      "productId": 1,
-      "quantity": 1,
-      "id": 4
-    },
-    {
-      "userId": 1,
-      "productId": 2,
-      "quantity": 1,
-      "id": 3
     }
   ]
 }

@@ -1,17 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
 import "./Cart.css";
+import { Link } from "react-router-dom";
 
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import ButtonUI from "../../components/Button/Button";
-import { getIdCart } from "../../../redux/actions/cart";
+import { Alert } from 'reactstrap'
 
 
 class Cart extends React.Component {
     state = {
         cartList: [],
-        id: ''
     }
     componentDidMount() {
         this.getItemCarts()
@@ -42,6 +42,7 @@ class Cart extends React.Component {
                     <td>{val.product.productName}</td>
                     <td>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(val.product.price)}</td>
                     <td>{val.quantity}</td>
+                    <td><img src={val.product.image} style={{ height: "150px", width: "100px", objectFit: "contain" }} /></td>
                     <td><ButtonUI onClick={() => this.deleteCartsItem(val.id)}>Delete</ButtonUI></td>
                 </tr>
             )
@@ -62,38 +63,45 @@ class Cart extends React.Component {
     }
 
     render() {
-        return (
-            <div className="container" >
-                <h1>Cart Details</h1> <br />
-                <h5>Username: {this.props.user.username}</h5>
-                <table className="table table-striped text-center align-item-center">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Product Name</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.renderCarts()}
-                    </tbody>
-                </table>
-            </div>
-        );
+        if (this.state.cartList > 0) {
+            return (
+                <div className="container" >
+                    <h1>Cart Details</h1> <br />
+                    <h5>Username: {this.props.user.username}</h5>
+                    <table className="table table-striped text-center align-item-center">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Image</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.renderCarts()}
+                        </tbody>
+                    </table>
+                </div>
+            )
+        } else {
+            return (
+                <div className="container mt-5">
+                    <Alert>Cart Kosong
+                <Link to="/"> Silahkan Belanja</Link>
+                    </Alert>
+                </div>
+            )
+        }
     }
 }
 
 const mapStateToProps = (state) => {
     return {
         user: state.user,
-        cart: state.cart
     };
 };
 
-const mapDispatchToProps = {
-    onGetId: getIdCart
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Cart);
+export default connect(mapStateToProps)(Cart);

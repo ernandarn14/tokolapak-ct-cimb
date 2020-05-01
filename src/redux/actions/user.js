@@ -84,7 +84,7 @@ export const registerHandler = (userData) => {
             payload: "Username sudah digunakan",
           });
         } else {
-          Axios.post(`${API_URL}/users`, userData)
+          Axios.post(`${API_URL}/users`, {...userData, role: "user"})
             .then((res) => {
               console.log(res.data);
               dispatch({
