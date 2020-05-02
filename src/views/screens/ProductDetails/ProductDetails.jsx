@@ -40,7 +40,7 @@ class ProductDetails extends React.Component {
                 })
                     .then(res => {
                         console.log(res);
-                        swal('Selamat', 'Item berhasil ditambah di Add To Cart', 'success')
+                        swal('Success', 'Item Added To Cart', 'success')
                     })
                     .catch(err => {
                         console.log(err);
@@ -53,7 +53,7 @@ class ProductDetails extends React.Component {
                 })
                     .then(res => {
                         console.log(res);
-                        swal('Selamat', 'Item berhasil ditambah di Add To Cart', 'success')
+                        swal('Success', 'Item Added To Cart', 'success')
                     })
                     .catch(err => {
                         console.log(err);

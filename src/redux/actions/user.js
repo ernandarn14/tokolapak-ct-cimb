@@ -24,7 +24,6 @@ export const loginHandler = (userData) => {
             payload: res.data[0],
           });
         } else {
-          alert("masuk");
           dispatch({
             type: ON_LOGIN_FAIL,
             payload: "Username atau password salah",

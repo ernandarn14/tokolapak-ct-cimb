@@ -16,9 +16,10 @@ import swal from 'sweetalert'
 class Cart extends React.Component {
     state = {
         cartList: [],
-       transactionList: [],
-        modalOpen: false,
-        totalPrice: 0
+        transactionList: [],
+        totalPrice: 0,
+        modalOpen: false
+        
     }
 
     componentDidMount() {
@@ -38,7 +39,7 @@ class Cart extends React.Component {
                 res.data.map((val) => {
                     subTotal += val.quantity * val.product.price
                 })
-                this.setState({ cartList: res.data, totalPrice: subTotal })
+                this.setState({ cartList: res.data, totalPrice: subTotal})
             })
             .catch((err) => {
                 console.log(err);
@@ -100,14 +101,7 @@ class Cart extends React.Component {
         })
             .then(res => {
                 res.data.map(val => {
-                    Axios.delete(`${API_URL}/carts/${val.id}`)
-                        .then((res) => {
-                            console.log(res);
-                            this.getItemCarts();
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        });
+                    this.deleteCartsItem(val.id)
                     this.setState({ transactionList: [...this.state.transactionList, val.product] })
                 })
                 Axios.post(`${API_URL}/transactions`, {
@@ -116,56 +110,18 @@ class Cart extends React.Component {
                     status: "pending",
                     items: this.state.transactionList,
                 })
-                .then(res => {
-                                    console.log(res)
-                                    swal('Success', 'Transaction Success', 'success')
-                                })
-                                .catch(err => {
-                                    console.log(err)
-                                    swal('Failed', 'Transaction Failed', 'error')
-                                })
+                    .then(res => {
+                        console.log(res)
+                        swal('Success', 'Transaction Success', 'success')
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        swal('Failed', 'Transaction Failed', 'error')
+                    })
             })
             .catch(err => {
                 console.log(err)
             })
-        // Axios.get(`${API_URL}/carts`, {
-        //     params: {
-        //         userId: this.props.user.id,
-        //         _expand: "product",
-        //     },
-        // })
-        //     .then((res) => {
-        //         const { totalPrice, transactionList } = this.state
-        //         res.data.map(val => {
-        //             Axios.delete(`${API_URL}/carts/${val.id}`)
-        //                 .then(res => {
-        //                     console.log(res.data)
-        //                     this.getItemCarts()
-        //                 })
-        //                 .catch(err => {
-        //                     console.log(err);
-                           
-        //                 })
-        //             this.setState({ transactionList: [...transactionList, val.product] })
-        //         })
-        //         Axios.post(`${API_URL}/transactions`, {
-        //             userId: this.props.user.id,
-        //             totalPrice: this.state.totalPrice,
-        //             status: "pending",
-        //             items: this.state.transactionList
-        //         })
-        //             .then(res => {
-        //                 console.log(res)
-        //                 swal('Success', 'Transaction Success', 'success')
-        //             })
-        //             .catch(err => {
-        //                 console.log(err)
-        //                 swal('Failed', 'Transaction Failed', 'error')
-        //             })
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
     }
 
     toggleModal = () => {
@@ -193,39 +149,39 @@ class Cart extends React.Component {
                         <div className="d-flex justify-content-center">
                             <ButtonUI className="ml-4" type="contained" onClick={this.toggleModal}>Check Out</ButtonUI>
                         </div>
-                                <Modal
-                                    toggle={this.toggleModal}
-                                    isOpen={this.state.modalOpen}
-                                    className="checkout-modal"
-                                >
-                                    <ModalHeader toggle={this.toggleModal}>
-                                        <caption>
-                                            <h3>Checkout</h3>
-                                        </caption>
-                                    </ModalHeader>
-                                    <ModalBody>
-                                        <h5>Username: {this.props.user.username}</h5><br />
-                                        <Table>
-                                            <thead>
-                                                <tr>
-                                                    <th>No.</th>
-                                                    <th>Name</th>
-                                                    <th>Price</th>
-                                                    <th>Quantity</th>
-                                                    <th>Sub Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>{this.renderCheckOut()}</tbody>
-                                        </Table>
-                                        <h6 style={{fontWeight: "bold"}}>Total Price : {
-                                            new Intl.NumberFormat("id-ID",
-                                                { style: "currency", currency: "IDR" }).format(this.state.totalPrice)
-                                        } </h6>
-                                    </ModalBody>
-                                    <ModalFooter>
-                                        <ButtonUI type="contained" onClick={ this.checkOutHandler }>Confirm</ButtonUI>
-                                    </ModalFooter>
-                                </Modal> 
+                        <Modal
+                            toggle={this.toggleModal}
+                            isOpen={this.state.modalOpen}
+                            className="checkout-modal"
+                        >
+                            <ModalHeader toggle={this.toggleModal}>
+                                <caption>
+                                    <h3>Checkout</h3>
+                                </caption>
+                            </ModalHeader>
+                            <ModalBody>
+                                <h5>Username: {this.props.user.username}</h5><br />
+                                <Table>
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Sub Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>{this.renderCheckOut()}</tbody>
+                                </Table>
+                                <h6 style={{ fontWeight: "bold" }}>Total Price : {
+                                    new Intl.NumberFormat("id-ID",
+                                        { style: "currency", currency: "IDR" }).format(this.state.totalPrice)
+                                } </h6>
+                            </ModalBody>
+                            <ModalFooter>
+                                <ButtonUI type="contained" onClick={this.checkOutHandler}>Confirm</ButtonUI>
+                            </ModalFooter>
+                        </Modal>
                     </>
 
                 ) : (
