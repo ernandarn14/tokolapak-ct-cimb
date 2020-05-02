@@ -1,13 +1,17 @@
 table,
-tr, th,td {
-  border: 2px solid black;
+tr,
+th,
+td {
+  border: 1px solid black;
   border-collapse: collapse;
   padding: 15px;
 }
 th {
-    text-align: center;
-    font-weight: bold;
-    background-color: darkblue;
-    color: wheat;
-    font-size: 18px;
-  }
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+.checkout-modal {
+  width: 50vw;   
+  max-width: 90vw;
+}

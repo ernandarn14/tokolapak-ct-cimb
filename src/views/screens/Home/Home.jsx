@@ -153,7 +153,7 @@ class Home extends React.Component {
           <Link to="/" style={{ color: "inherit" }} onClick={() => this.getBestSellerData("Tab")}>
             <h6 className="mx-4 font-weight-bold">TAB</h6>
           </Link>
-          <Link to="/" style={{ color: "inherit" }} onClick={() => this.getBestSellerData("Desktop")}>
+          <Link to="/" style={{ color: "inherit" }} onClick={() => this.getBestSellerData("Dekstop")}>
             <h6 className="mx-4 font-weight-bold">DESKTOP</h6>
           </Link>
         </div>

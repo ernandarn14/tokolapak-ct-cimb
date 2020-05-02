@@ -5,7 +5,7 @@ import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import { connect } from "react-redux";
 import swal from 'sweetalert'
-import cart from '../../../redux/reducers/cart';
+
 
 class ProductDetails extends React.Component {
     state = {
