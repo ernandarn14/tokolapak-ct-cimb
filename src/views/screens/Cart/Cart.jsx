@@ -16,10 +16,14 @@ import swal from 'sweetalert'
 class Cart extends React.Component {
     state = {
         cartList: [],
-        transactionList: [],
-        totalPrice: 0,
-        modalOpen: false
-        
+        checkOutItems: [],
+        modalOpen: false,
+        transactionList: {
+            userId: 0,
+            totalPrice: 0,
+            status: "pending",
+            items: []
+        }
     }
 
     componentDidMount() {
@@ -39,7 +43,15 @@ class Cart extends React.Component {
                 res.data.map((val) => {
                     subTotal += val.quantity * val.product.price
                 })
-                this.setState({ cartList: res.data, totalPrice: subTotal})
+                this.setState({
+                    cartList: res.data, transactionList: {
+                        ...this.state.transactionList,
+                        userId: this.props.user.id,
+                        totalPrice: subTotal,
+                        status: "pending",
+                        items: res.data
+                    }
+                })
             })
             .catch((err) => {
                 console.log(err);
@@ -56,7 +68,10 @@ class Cart extends React.Component {
                     <td>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(val.product.price)}</td>
                     <td>{val.quantity}</td>
                     <td><img src={val.product.image} style={{ height: "150px", width: "100px", objectFit: "contain" }} /></td>
-                    <td><ButtonUI onClick={() => this.deleteCartsItem(val.id)} type="outlined">Delete</ButtonUI></td>
+                    <td>
+                        <ButtonUI onClick={() => this.deleteCartsItem(val.id)} type="outlined">Delete</ButtonUI>
+                        {/* <input type="checkbox" onChange={(e) => this.checkboxHandler(e,idx)} className="form-control"/> */}
+                    </td>
                 </tr>
             )
         })
@@ -93,39 +108,39 @@ class Cart extends React.Component {
     }
 
     checkOutHandler = () => {
-        Axios.get(`${API_URL}/carts`, {
-            params: {
-                userId: this.props.user.id,
-                _expand: "product"
-            }
-        })
+        Axios.post(`${API_URL}/transactions`, this.state.transactionList)
             .then(res => {
-                res.data.map(val => {
+                console.log(res)
+                swal('Success', 'Transaction Success', 'success')
+                this.setState({ modalOpen: false })
+                this.state.cartList.map(val => {
                     this.deleteCartsItem(val.id)
-                    this.setState({ transactionList: [...this.state.transactionList, val.product] })
                 })
-                Axios.post(`${API_URL}/transactions`, {
-                    userId: this.props.user.id,
-                    totalPrice: this.state.totalPrice,
-                    status: "pending",
-                    items: this.state.transactionList,
-                })
-                    .then(res => {
-                        console.log(res)
-                        swal('Success', 'Transaction Success', 'success')
-                    })
-                    .catch(err => {
-                        console.log(err)
-                        swal('Failed', 'Transaction Failed', 'error')
-                    })
             })
             .catch(err => {
                 console.log(err)
+                swal('Failed', 'Transaction Failed', 'error')
             })
     }
 
     toggleModal = () => {
         this.setState({ modalOpen: !this.state.modalOpen });
+    };
+
+    checkboxHandler = (e, idx) => {
+        const { checked } = e.target;
+
+        if (checked) {
+            this.setState({ checkOutItems: [...this.state.checkOutItems, idx] })
+        } else {
+            this.setState({
+                checkOutItems: [
+                    ...this.state.checkOutItems.filter(val => val !== idx)
+                ]
+            });
+        }
+
+
     };
 
     render() {
@@ -175,7 +190,7 @@ class Cart extends React.Component {
                                 </Table>
                                 <h6 style={{ fontWeight: "bold" }}>Total Price : {
                                     new Intl.NumberFormat("id-ID",
-                                        { style: "currency", currency: "IDR" }).format(this.state.totalPrice)
+                                        { style: "currency", currency: "IDR" }).format(this.state.transactionList.totalPrice)
                                 } </h6>
                             </ModalBody>
                             <ModalFooter>

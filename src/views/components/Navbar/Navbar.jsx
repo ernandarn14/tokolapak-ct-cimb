@@ -15,7 +15,9 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 import "./Navbar.css";
 import ButtonUI from "../Button/Button";
-import { logoutHandler, filterProductHandler, filterHandler } from "../../../redux/actions";
+import { logoutHandler, filterHandler } from "../../../redux/actions";
+import Axios from "axios";
+import { API_URL } from "../../../constants/API";
 
 const CircleBg = ({ children }) => {
   return <div className="circle-bg">{children}</div>;
@@ -26,6 +28,7 @@ class Navbar extends React.Component {
     searchBarIsFocused: false,
     searchBarInput: "",
     dropdownOpen: false,
+    cartList: []
   };
 
   onFocus = () => {
@@ -45,6 +48,39 @@ class Navbar extends React.Component {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
   };
 
+  componentWillMount() {
+    this.getItemCarts()
+  }
+
+  getItemCarts = () => {
+    let total = 0
+    Axios.get(`${API_URL}/carts`, {
+      params: {
+        userId: this.props.user.id,
+        _expand: "product",
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        res.data.map((val) => {
+          total += val.quantity
+        })
+        this.setState({
+          cartList: total
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  renderTotalCart = () => {
+    const { cartList } = this.state
+    return cartList.map((val) => {
+      return val.quantity
+    })
+  }
+
   render() {
     return (
       <div className="d-flex flex-row justify-content-between align-items-center py-4 navbar-container">
@@ -60,10 +96,10 @@ class Navbar extends React.Component {
           <input
             onFocus={this.onFocus}
             onBlur={this.onBlur}
-            onChange={(e)=>this.props.onFilter(e.target.value)}
+            onChange={(e) => this.props.onFilter(e.target.value)}
             className={`search-bar ${
               this.state.searchBarIsFocused ? "active" : null
-            }`}
+              }`}
             type="text"
             placeholder="Cari produk impianmu disini"
           />
@@ -80,16 +116,30 @@ class Navbar extends React.Component {
                   <p className="small ml-3 mr-4">{this.props.user.username}</p>
                 </DropdownToggle>
                 <DropdownMenu className="mt-2">
-                  <DropdownItem>
-                    <Link
-                      style={{ color: "inherit", textDecoration: "none" }}
-                      to="/admin/dashboard"
-                    >
-                      Dashboard
+                  {this.props.user.role == 'admin' ? (
+                    <>
+                      <DropdownItem>
+                        <Link
+                          style={{ color: "inherit", textDecoration: "none" }}
+                          to="/admin/dashboard"
+                        >
+                          Dashboard
                     </Link>
-                  </DropdownItem>
-                  <DropdownItem>Members</DropdownItem>
-                  <DropdownItem>Payments</DropdownItem>
+                      </DropdownItem>
+                      <DropdownItem>Members</DropdownItem>
+                      <DropdownItem>Payments</DropdownItem>
+                    </>) : (
+                      <>
+                        <DropdownItem>
+                          <Link
+                            style={{ color: "inherit", textDecoration: "none" }}
+                          >
+                            Wishlist
+                    </Link>
+                        </DropdownItem>
+                        <DropdownItem>History</DropdownItem>
+                      </>
+                    )}
                 </DropdownMenu>
               </Dropdown>
               <Link
@@ -104,44 +154,45 @@ class Navbar extends React.Component {
                 />
                 <CircleBg>
                   <small style={{ color: "#3C64B1", fontWeight: "bold" }}>
-                    4
+                    {/* {this.renderTotalCart()} */}
+                    {this.state.cartList}
                   </small>
                 </CircleBg>
               </Link>
               <Link
-                  style={{ textDecoration: "none", color: "inherit" }}
-                  to="/"
-                >
-                  <ButtonUI
-                onClick={this.logoutBtnHandler}
-                className="ml-3"
-                type="textual"
+                style={{ textDecoration: "none", color: "inherit" }}
+                to="/"
               >
-                Logout
+                <ButtonUI
+                  onClick={this.logoutBtnHandler}
+                  className="ml-3"
+                  type="textual"
+                >
+                  Logout
               </ButtonUI>
-                </Link>
-              
+              </Link>
+
             </>
           ) : (
-            <>
-              <ButtonUI className="mr-3" type="textual">
-                <Link
-                  style={{ textDecoration: "none", color: "inherit" }}
-                  to="/auth"
-                >
-                  Sign in
+              <>
+                <ButtonUI className="mr-3" type="textual">
+                  <Link
+                    style={{ textDecoration: "none", color: "inherit" }}
+                    to="/auth"
+                  >
+                    Sign in
                 </Link>
-              </ButtonUI>
-              <ButtonUI type="contained">
-                <Link
-                  style={{ textDecoration: "none", color: "inherit" }}
-                  to="/auth"
-                >
-                  Sign up
+                </ButtonUI>
+                <ButtonUI type="contained">
+                  <Link
+                    style={{ textDecoration: "none", color: "inherit" }}
+                    to="/auth"
+                  >
+                    Sign up
                 </Link>
-              </ButtonUI>
-            </>
-          )}
+                </ButtonUI>
+              </>
+            )}
         </div>
       </div>
     );

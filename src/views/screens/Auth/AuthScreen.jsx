@@ -29,7 +29,7 @@ class AuthScreen extends React.Component {
 
     componentDidUpdate() {
         if (this.props.user.id) {
-            alert("login");
+            //alert("login");
             const cookie = new Cookies();
             cookie.set("authData", JSON.stringify(this.props.user), { path: "/" });
         }
@@ -151,13 +151,13 @@ class AuthScreen extends React.Component {
                         value={this.state.loginForm.username}
                         onChange={(e) => this.inputHandler(e, "username", "loginForm")}
                         placeholder="Username"
-                        className="mt-5"
+                        className="mt-5" 
                     />
                     <TextField
                         value={this.state.loginForm.password}
                         onChange={(e) => this.inputHandler(e, "password", "loginForm")}
                         placeholder="Password"
-                        className="mt-2"
+                        className="mt-2" type="password"
                     />
                     <div className="d-flex justify-content-center">
                         <ButtonUI
