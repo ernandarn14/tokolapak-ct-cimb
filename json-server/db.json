@@ -64,7 +64,20 @@
       "id": 5
     }
   ],
-  "carts": [],
+  "carts": [
+    {
+      "userId": 1,
+      "productId": 2,
+      "quantity": 2,
+      "id": 1
+    },
+    {
+      "userId": 1,
+      "productId": 1,
+      "quantity": 1,
+      "id": 2
+    }
+  ],
   "transactions": [
     {
       "userId": 1,
@@ -146,64 +159,6 @@
       "userId": 1,
       "productId": 1,
       "id": 1
-    }
-  ],
-  "history": [
-    {
-      "userId": 1,
-      "totalBelanja": 5000000,
-      "status": "success",
-      "tglBelanja": "2020-05-04T16:16:47.022Z",
-      "tglSelesai": "2020-05-04T16:16:47.022Z",
-      "id": 1
-    },
-    {
-      "userId": 1,
-      "totalBelanja": 35000000,
-      "status": "success",
-      "tglBelanja": "05/05/2020, 08:29:15",
-      "tglSelesai": "05/05/2020, 08:29:15",
-      "id": 2
-    },
-    {
-      "userId": 1,
-      "totalBelanja": 35000000,
-      "status": "success",
-      "tglBelanja": "05/05/2020, 08:29:15",
-      "tglSelesai": "05/05/2020, 08:29:15",
-      "id": 3
-    },
-    {
-      "userId": 1,
-      "totalBelanja": 35000000,
-      "status": "success",
-      "tglBelanja": "05/05/2020, 08:29:15",
-      "tglSelesai": "05/05/2020, 08:29:15",
-      "id": 4
-    },
-    {
-      "userId": 1,
-      "totalBelanja": 20000000,
-      "status": "success",
-      "tglBelanja": "05/05/2020, 08:30:42",
-      "tglSelesai": "05/05/2020, 08:30:42",
-      "id": 5
-    },
-    {
-      "userId": 1,
-      "totalBelanja": 20000000,
-      "status": "success",
-      "tglBelanja": "05/05/2020, 08:30:42",
-      "tglSelesai": "05/05/2020, 08:30:42",
-      "id": 6
-    },
-    {
-      "userId": 1,
-      "totalBelanja": 20000000,
-      "status": "success",
-      "tglBelanja": "05/05/2020, 08:30:42",
-      "tglSelesai": "05/05/2020, 08:30:42",
-      "id": 7
     }
   ]
 }

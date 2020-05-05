@@ -6,22 +6,20 @@ import { API_URL } from "../../../constants/API";
 class ReportProduct extends React.Component {
     state = {
         productList: [],
-        totalPayment: 0,
     }
 
-    getDataTransaction = (item) => {
+    getDataTransaction = () => {
         let total = 0
-        Axios.get(`${API_URL}/transactions`, {
+        Axios.get(`${API_URL}/products`, {
             params: {
-                status: item,
                 _embed: "transactionDetails"
             }
         })
             .then((res) => {
                 console.log(res);
-                res.data.map((val) => {
-                    total += val.totalBelanja
-                })
+                // res.data.map((val) => {
+                //     total += val.totalBelanja
+                // })
                 this.setState({
                     productList: res.data
                 });
@@ -36,22 +34,23 @@ class ReportProduct extends React.Component {
     }
 
     renderReport = () => {
-        const {productList} = this.state
-        return this.state.productList.map((val, idx) => {
-             const {  status } = val;
-            const { productId, quantity } = val.transactionDetails[0]
-            let total = productList.reduce((sum, productList) => sum + productList.quantity, 0);
-            if (status == "success") {
-                return (
-                    <>
-                        <tr>
-                            <td>{idx + 1}</td>
-                            <td>{productId}</td>
-                            <td>{quantity}</td>
-                        </tr>
-                    </>
-                )
-            }
+        const { productList } = this.state
+        return productList.map((val, idx) => {
+            const { id, productName, transactionDetails } = val;
+            let totalBuying = 0
+            transactionDetails.map(val => {
+                totalBuying += val.quantity
+            })
+            return (
+                <>
+                    <tr>
+                        <td>{idx + 1}</td>
+                        <td>{id}</td>
+                        <td>{productName}</td>
+                        <td>{totalBuying}</td>
+                    </tr>
+                </>
+            )
         })
     }
 
@@ -67,11 +66,12 @@ class ReportProduct extends React.Component {
                         <tr>
                             <th>No</th>
                             <th>ID Product</th>
-                            <th>Total Payments</th>
+                            <th>Nama Product</th>
+                            <th>Total Buying</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderReport("success")}
+                        {this.renderReport()}
                     </tbody>
                 </Table>
             </div>

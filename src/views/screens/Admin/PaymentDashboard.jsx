@@ -4,6 +4,7 @@ import { API_URL } from "../../../constants/API";
 import ButtonUI from "../../components/Button/Button";
 import { connect } from "react-redux";
 import swal from "sweetalert";
+import user from "../../../redux/types/user";
 
 class PaymentDashboard extends React.Component {
   state = {
@@ -16,6 +17,7 @@ class PaymentDashboard extends React.Component {
     Axios.get(`${API_URL}/transactions`, {
       params: {
         status: val,
+        // _expand: "product",
         _embed: "transactionDetails",
       },
     })
@@ -87,7 +89,7 @@ class PaymentDashboard extends React.Component {
                 <div className="d-flex justify-content-around align-items-center">
                   <div className="d-flex">
                     <div className="d-flex flex-column ml-4 justify-content-center">
-                      <h5>{productId}</h5>
+                      <h6>ID Product: {productId}</h6>
                       <h6>
                         Price:
                         <span style={{ fontWeight: "normal" }}>
@@ -159,7 +161,7 @@ class PaymentDashboard extends React.Component {
                 <div className="d-flex justify-content-around align-items-center">
                   <div className="d-flex">
                     <div className="d-flex flex-column ml-4 justify-content-center">
-                      <h5>{productId}</h5>
+                      <h5>ID Product: {productId}</h5>
                       <h6>
                         Price:
                         <span style={{ fontWeight: "normal" }}>

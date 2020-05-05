@@ -78,11 +78,11 @@ class History extends React.Component {
                     </Card>
                     <Card className={`collapse-item ${
                         this.state.activeData.includes(idx) ? "active" : null
-                        }`}>
-                        <div className="d-flex justify-content-around align-items-center">
+                        } p-3`}>
+                        <div className="d-flex justify-content-around align-items-center mt-3">
                             <div className="d-flex">
                                 <div className="d-flex flex-column ml-4 justify-content-center">
-                                    <h5>{productId}</h5>
+                                    <h6>ID Product: {productId}</h6>
                                     <h6>
                                         Price:
                       <span style={{ fontWeight: "normal" }}>
