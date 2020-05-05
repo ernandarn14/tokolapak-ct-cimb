@@ -81,7 +81,7 @@ class PaymentDashboard extends React.Component {
             <tr
               className={`collapse-item ${
                 this.state.activeData.includes(idx) ? "active" : null
-              }`}
+                }`}
             >
               <td className="" colSpan={4}>
                 <div className="d-flex justify-content-around align-items-center">
@@ -153,7 +153,7 @@ class PaymentDashboard extends React.Component {
             <tr
               className={`collapse-item ${
                 this.state.activeData.includes(idx) ? "active" : null
-              }`}
+                }`}
             >
               <td className="" colSpan={4}>
                 <div className="d-flex justify-content-around align-items-center">
@@ -237,7 +237,7 @@ class PaymentDashboard extends React.Component {
           <ButtonUI
             className={`auth-screen-btn ${
               this.state.activePage == "pending" ? "active" : null
-            }`}
+              }`}
             type="outlined"
             onClick={() =>
               this.setState(
@@ -251,7 +251,7 @@ class PaymentDashboard extends React.Component {
           <ButtonUI
             className={`ml-3 auth-screen-btn ${
               this.state.activePage == "success" ? "active" : null
-            }`}
+              }`}
             type="outlined"
             onClick={() =>
               this.setState(

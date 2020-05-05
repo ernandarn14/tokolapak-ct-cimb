@@ -21,16 +21,26 @@ class Cart extends React.Component {
             totalBelanja: 0,
             status: "pending",
             tglBelanja: new Date(),
-            tglSelesai: ""
+            tglSelesai: "",
+            methodShipping: "Economy"
         },
         modalOpen: false,
-        //totalBelanja: 0,
-        methodShipping: "Economy"
+        //totalBelanja: 0, 
     }
 
     componentDidMount() {
         this.getItemCarts()
     }
+
+    inputHandler = (e, field, form) => {
+        let { value } = e.target;
+        this.setState({
+          [form]: {
+            ...this.state[form],
+            [field]: value,
+          },
+        });
+      };
 
     getItemCarts = () => {
         let subTotal = 0
@@ -46,12 +56,12 @@ class Cart extends React.Component {
                 res.data.map((val) => {
                     subTotal += val.quantity * val.product.price
                 })
-                totalPrice += subTotal
+                totalPrice += subTotal 
                 this.setState({
                     cartList: res.data, transactionItems: {
                         ...this.state.transactionItems,
                         userId: this.props.user.id,
-                        totalBelanja: subTotal,
+                        totalBelanja: totalPrice,
                         status: "pending",
                         tglBelanja: new Date(),
                         tglSelesai: ""
@@ -218,19 +228,27 @@ class Cart extends React.Component {
                                     </thead>
                                     <tbody>{this.renderCheckOut()}</tbody>
                                 </Table>
-                                <h6 style={{ fontWeight: "bold" }}>Total Price : {
+                                <h6 style={{ fontWeight: "bold", textAlign: "right" }}>Total Price : {
                                     new Intl.NumberFormat("id-ID",
                                         { style: "currency", currency: "IDR" }).format(this.state.transactionItems.totalBelanja)
                                 } </h6>
                                 <div className="d-flex flex-row mt-4">
                                     <label>Method Shipping</label>
-                                    <select className="custom-text-input pl-3">
-                                        <option value="Phone">Instant</option>
-                                        <option value="Tab">Sameday</option>
-                                        <option value="Laptop">Express</option>
-                                        <option value="Laptop">Economy</option>
+                                    <select className="custom-text-input pl-3"  onChange={(e) => this.inputHandler(e, "methodShipping", "transactionItems")}>
+                                        <option value="100000">Instant</option>
+                                        <option value="50000">Sameday</option>
+                                        <option value="20000">Express</option>
+                                        <option value="0">Economy</option>
                                     </select>
                                 </div>
+                                <h6 style={{ fontWeight: "bold" }} onChange={(e) => this.inputHandler(e, "methodShipping", "transactionItems")}>Shipping Price : {
+                                    new Intl.NumberFormat("id-ID",
+                                        { style: "currency", currency: "IDR" }).format(this.state.transactionItems.methodShipping)
+                                } </h6>
+                                <h6 style={{ fontWeight: "bold" }}>Total Payments : {
+                                    new Intl.NumberFormat("id-ID",
+                                        { style: "currency", currency: "IDR" }).format(this.state.transactionItems.totalBelanja)
+                                } </h6>
 
                             </ModalBody>
                             <ModalFooter>
