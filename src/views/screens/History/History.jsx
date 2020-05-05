@@ -10,7 +10,8 @@ import { connect } from 'react-redux';
 
 class History extends React.Component {
     state = {
-        data: []
+        data: [],
+        activeData: []
     }
 
     getHistoryData = () => {
@@ -31,32 +32,37 @@ class History extends React.Component {
     }
     
     renderHistory = () => {
-        return this.state.data.map(val => {
+        return this.state.data.map((val, idx) => {
             const { totalBelanja, tglBelanja } = val;
-            const { quantity } = val.transactionDetails[0]
+            const { productId, price, quantity, totalPrice } = val.transactionDetails[0]
             let tanggal = new Date(tglBelanja)
             return (
-                <Card className="data-wishlist">
+                <>
+                  <Card className="data-wishlist" onClick={() => {
+              if (this.state.activeData.includes(idx)) {
+                this.setState({
+                    activeData: [
+                    ...this.state.activeData.filter((item) => item !== idx),
+                  ],
+                });
+              } else {
+                this.setState({
+                    activeData: [...this.state.activeData, idx],
+                });
+              }
+            }}>
                     <div className="d-flex justify-content-around align-items-center">
                         <div className="d-flex">
-                            {/* <img src={image} alt="" style={{ width: "224px", height: "250px", objectFit: "contain" }} /> */}
                             <div className="d-flex flex-column ml-4 justify-content-center">
                                 <h5>{val.id}</h5>
                                 <h6>
-                                    Price:
+                                    Total Shipping:
                       <span style={{ fontWeight: "normal" }}>
                                         {" "}
                                         {new Intl.NumberFormat("id-ID", {
                                             style: "currency",
                                             currency: "IDR",
                                         }).format(totalBelanja)}
-                                    </span>
-                                </h6>
-                                <h6>
-                                    Quantity:
-                      <span style={{ fontWeight: "normal" }}>
-                                        {" "}
-                                        {quantity}
                                     </span>
                                 </h6>
                                 <h6>
@@ -70,22 +76,50 @@ class History extends React.Component {
                         </div>
                     </div>
                 </Card>
+                <Card className={`collapse-item ${
+              this.state.activeData.includes(idx) ? "active" : null
+            }`}>
+                     <div className="d-flex justify-content-around align-items-center">
+                        <div className="d-flex">
+                            <div className="d-flex flex-column ml-4 justify-content-center">
+                                <h5>{productId}</h5>
+                                <h6>
+                                    Price:
+                      <span style={{ fontWeight: "normal" }}>
+                                        {" "}
+                                        {new Intl.NumberFormat("id-ID", {
+                                            style: "currency",
+                                            currency: "IDR",
+                                        }).format(price)}
+                                    </span>
+                                </h6>
+                                <h6>
+                                    Quantity:
+                      <span style={{ fontWeight: "normal" }}>
+                                        {" "}
+                                        {quantity}
+                                    </span>
+                                </h6>
+                                <h6>
+                                    Sub Total:
+                      <span style={{ fontWeight: "normal" }}>
+                                        {" "}
+                                        {new Intl.NumberFormat("id-ID", {
+                                            style: "currency",
+                                            currency: "IDR",
+                                        }).format(totalPrice)}
+                                    </span>
+                                </h6>
+                             
+                            </div>
+                        </div>
+                    </div>
+
+                </Card>
+                </>
             )
         })
     }
-
-    // deleteWishlist = (id) => {
-    //     Axios.delete(`${API_URL}/wishlists/${id}`)
-    //         .then(res => {
-    //             console.log(res.data)
-    //             this.getWishlistData()
-    //             swal('Success', 'Wishlist Item Removed', 'success')
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //             swal('Failed', 'Wishlist Item Failed to Remove', 'error')
-    //         })
-    // }
 
     componentDidMount() {
         this.getHistoryData();
