@@ -30,7 +30,7 @@ class History extends React.Component {
                 console.log(err);
             });
     }
-    
+
     renderHistory = () => {
         return this.state.data.map((val, idx) => {
             const { totalBelanja, tglBelanja } = val;
@@ -38,84 +38,84 @@ class History extends React.Component {
             let tanggal = new Date(tglBelanja)
             return (
                 <>
-                  <Card className="data-wishlist" onClick={() => {
-              if (this.state.activeData.includes(idx)) {
-                this.setState({
-                    activeData: [
-                    ...this.state.activeData.filter((item) => item !== idx),
-                  ],
-                });
-              } else {
-                this.setState({
-                    activeData: [...this.state.activeData, idx],
-                });
-              }
-            }}>
-                    <div className="d-flex justify-content-around align-items-center">
-                        <div className="d-flex">
-                            <div className="d-flex flex-column ml-4 justify-content-center">
-                                <h5>{val.id}</h5>
-                                <h6>
-                                    Total Shipping:
+                    <Card className="data-wishlist" onClick={() => {
+                        if (this.state.activeData.includes(idx)) {
+                            this.setState({
+                                activeData: [
+                                    ...this.state.activeData.filter((item) => item !== idx),
+                                ],
+                            });
+                        } else {
+                            this.setState({
+                                activeData: [...this.state.activeData, idx],
+                            });
+                        }
+                    }}>
+                        <div className="d-flex justify-content-around align-items-center">
+                            <div className="d-flex">
+                                <div className="d-flex flex-column ml-4 justify-content-center">
+                                    <h5>{val.id}</h5>
+                                    <h6>
+                                        Total Shipping:
                       <span style={{ fontWeight: "normal" }}>
-                                        {" "}
-                                        {new Intl.NumberFormat("id-ID", {
-                                            style: "currency",
-                                            currency: "IDR",
-                                        }).format(totalBelanja)}
-                                    </span>
-                                </h6>
-                                <h6>
-                                    Date Checkout:
+                                            {" "}
+                                            {new Intl.NumberFormat("id-ID", {
+                                                style: "currency",
+                                                currency: "IDR",
+                                            }).format(totalBelanja)}
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        Date Checkout:
                       <span style={{ fontWeight: "normal" }}>
-                                        {" "}
-                                        {tanggal.toLocaleString('en-GB')}
-                                    </span>
-                                </h6>
+                                            {" "}
+                                            {tanggal.toLocaleString('en-GB')}
+                                        </span>
+                                    </h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Card>
-                <Card className={`collapse-item ${
-              this.state.activeData.includes(idx) ? "active" : null
-            }`}>
-                     <div className="d-flex justify-content-around align-items-center">
-                        <div className="d-flex">
-                            <div className="d-flex flex-column ml-4 justify-content-center">
-                                <h5>{productId}</h5>
-                                <h6>
-                                    Price:
+                    </Card>
+                    <Card className={`collapse-item ${
+                        this.state.activeData.includes(idx) ? "active" : null
+                        }`}>
+                        <div className="d-flex justify-content-around align-items-center">
+                            <div className="d-flex">
+                                <div className="d-flex flex-column ml-4 justify-content-center">
+                                    <h5>{productId}</h5>
+                                    <h6>
+                                        Price:
                       <span style={{ fontWeight: "normal" }}>
-                                        {" "}
-                                        {new Intl.NumberFormat("id-ID", {
-                                            style: "currency",
-                                            currency: "IDR",
-                                        }).format(price)}
-                                    </span>
-                                </h6>
-                                <h6>
-                                    Quantity:
+                                            {" "}
+                                            {new Intl.NumberFormat("id-ID", {
+                                                style: "currency",
+                                                currency: "IDR",
+                                            }).format(price)}
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        Quantity:
                       <span style={{ fontWeight: "normal" }}>
-                                        {" "}
-                                        {quantity}
-                                    </span>
-                                </h6>
-                                <h6>
-                                    Sub Total:
+                                            {" "}
+                                            {quantity}
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        Sub Total:
                       <span style={{ fontWeight: "normal" }}>
-                                        {" "}
-                                        {new Intl.NumberFormat("id-ID", {
-                                            style: "currency",
-                                            currency: "IDR",
-                                        }).format(totalPrice)}
-                                    </span>
-                                </h6>
-                             
-                            </div>
-                        </div>
-                    </div>
+                                            {" "}
+                                            {new Intl.NumberFormat("id-ID", {
+                                                style: "currency",
+                                                currency: "IDR",
+                                            }).format(totalPrice)}
+                                        </span>
+                                    </h6>
 
-                </Card>
+                                </div>
+                            </div>
+                        </div>
+
+                    </Card>
                 </>
             )
         })
