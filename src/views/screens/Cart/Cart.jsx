@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import "./Cart.css";
 import { Link } from "react-router-dom";
@@ -16,14 +16,16 @@ import swal from 'sweetalert'
 class Cart extends React.Component {
     state = {
         cartList: [],
-        checkOutItems: [],
-        modalOpen: false,
-        transactionList: {
+        transactionItems: {
             userId: 0,
-            totalPrice: 0,
+            totalBelanja: 0,
             status: "pending",
-            items: []
-        }
+            tglBelanja: new Date(),
+            tglSelesai: ""
+        },
+        modalOpen: false,
+        //totalBelanja: 0,
+        methodShipping: "Economy"
     }
 
     componentDidMount() {
@@ -32,6 +34,7 @@ class Cart extends React.Component {
 
     getItemCarts = () => {
         let subTotal = 0
+        let totalPrice = 0
         Axios.get(`${API_URL}/carts`, {
             params: {
                 userId: this.props.user.id,
@@ -43,13 +46,15 @@ class Cart extends React.Component {
                 res.data.map((val) => {
                     subTotal += val.quantity * val.product.price
                 })
+                totalPrice += subTotal
                 this.setState({
-                    cartList: res.data, transactionList: {
-                        ...this.state.transactionList,
+                    cartList: res.data, transactionItems: {
+                        ...this.state.transactionItems,
                         userId: this.props.user.id,
-                        totalPrice: subTotal,
+                        totalBelanja: subTotal,
                         status: "pending",
-                        items: res.data
+                        tglBelanja: new Date(),
+                        tglSelesai: ""
                     }
                 })
             })
@@ -59,16 +64,19 @@ class Cart extends React.Component {
     }
 
     renderCarts = () => {
+        let subTotal = 0
         const { cartList } = this.state
         return cartList.map((val, idx) => {
+            subTotal = val.quantity * val.product.price
             return (
                 <tr>
-                    <td>{idx + 1}</td>
-                    <td>{val.product.productName}</td>
-                    <td>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(val.product.price)}</td>
-                    <td>{val.quantity}</td>
+                    <td style={{ verticalAlign: "middle" }}>{idx + 1}</td>
+                    <td style={{ verticalAlign: "middle" }}>{val.product.productName}</td>
+                    <td style={{ verticalAlign: "middle" }}>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(val.product.price)}</td>
+                    <td style={{ verticalAlign: "middle" }}>{val.quantity}</td>
+                    <td style={{ verticalAlign: "middle" }}>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(subTotal)}</td>
                     <td><img src={val.product.image} style={{ height: "150px", width: "100px", objectFit: "contain" }} /></td>
-                    <td>
+                    <td style={{ verticalAlign: "middle" }}>
                         <ButtonUI onClick={() => this.deleteCartsItem(val.id)} type="outlined">Delete</ButtonUI>
                         {/* <input type="checkbox" onChange={(e) => this.checkboxHandler(e,idx)} className="form-control"/> */}
                     </td>
@@ -107,21 +115,38 @@ class Cart extends React.Component {
         })
     }
 
+    dateTimeFormat = () => {
+        let date = new Date()
+        return date.toLocaleString('en-GB') + " - " + date.toLocaleTimeString('en-US')
+    }
+
     checkOutHandler = () => {
-        Axios.post(`${API_URL}/transactions`, this.state.transactionList)
+        const { cartList } = this.state
+        Axios.post(`${API_URL}/transactions`, this.state.transactionItems)
             .then(res => {
                 console.log(res)
-                swal('Success', 'Transaction Success', 'success')
-                this.setState({ modalOpen: false })
-                this.state.cartList.map(val => {
-                    this.deleteCartsItem(val.id)
+                cartList.map((val) => {
+                    Axios.post(`${API_URL}/transactionDetails`, {
+                        transactionId: res.data.id,
+                        productId: val.productId,
+                        price: val.product.price,
+                        quantity: val.quantity,
+                        totalPrice: val.product.price * val.quantity
+                    })
                 })
+                cartList.forEach(val => {
+                    this.deleteCartsItem(val.id)
+                });
+                swal('Success', 'Transaction Success', 'success')
+                this.setState({ modalOpen: false, cartList: [] })
             })
             .catch(err => {
                 console.log(err)
                 swal('Failed', 'Transaction Failed', 'error')
             })
     }
+
+
 
     toggleModal = () => {
         this.setState({ modalOpen: !this.state.modalOpen });
@@ -148,20 +173,25 @@ class Cart extends React.Component {
             <div className="container py-4">
                 {this.state.cartList.length > 0 ? (
                     <>
-                        <Table>
+                        <Table className="tabelCart">
                             <thead>
                                 <tr>
                                     <th>No.</th>
                                     <th>Name</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
+                                    <th>Sub Total</th>
                                     <th>Image</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>{this.renderCarts()}</tbody>
                         </Table>
-                        <div className="d-flex justify-content-center">
+                        <div className="d-flex flex-row mt-4 justify-content-between">
+                            <h6 style={{ fontWeight: "bold" }}>Total Price : {
+                                new Intl.NumberFormat("id-ID",
+                                    { style: "currency", currency: "IDR" }).format(this.state.transactionItems.totalBelanja)
+                            } </h6>
                             <ButtonUI className="ml-4" type="contained" onClick={this.toggleModal}>Check Out</ButtonUI>
                         </div>
                         <Modal
@@ -190,8 +220,18 @@ class Cart extends React.Component {
                                 </Table>
                                 <h6 style={{ fontWeight: "bold" }}>Total Price : {
                                     new Intl.NumberFormat("id-ID",
-                                        { style: "currency", currency: "IDR" }).format(this.state.transactionList.totalPrice)
+                                        { style: "currency", currency: "IDR" }).format(this.state.transactionItems.totalBelanja)
                                 } </h6>
+                                <div className="d-flex flex-row mt-4">
+                                    <label>Method Shipping</label>
+                                    <select className="custom-text-input pl-3">
+                                        <option value="Phone">Instant</option>
+                                        <option value="Tab">Sameday</option>
+                                        <option value="Laptop">Express</option>
+                                        <option value="Laptop">Economy</option>
+                                    </select>
+                                </div>
+
                             </ModalBody>
                             <ModalFooter>
                                 <ButtonUI type="contained" onClick={this.checkOutHandler}>Confirm</ButtonUI>
@@ -209,6 +249,7 @@ class Cart extends React.Component {
         );
     }
 }
+
 
 const mapStateToProps = (state) => {
     return {

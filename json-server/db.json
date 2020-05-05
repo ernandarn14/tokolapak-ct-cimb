@@ -3,7 +3,7 @@
     {
       "username": "nanda",
       "password": "123",
-      "fullName": "ernanda",
+      "fullName": "ernandarn",
       "role": "user",
       "id": 1
     },
@@ -53,28 +53,157 @@
       "category": "Dekstop",
       "image": "https://ibox.co.id/media/wysiwyg/iMacPro/imac-pro_01-min.png",
       "desc": "Mahal gaes ini ",
+      "id": 4
+    },
+    {
+      "productName": "Iphone 11 Pro Max",
+      "price": "25000000",
+      "category": "Phone",
+      "image": "https://ibox.co.id/media/wysiwyg/Slider/iphone-11-pro-available.png",
+      "desc": "HP paling laku",
       "id": 5
     }
   ],
-  "carts": [
+  "carts": [],
+  "transactions": [
     {
       "userId": 1,
-      "productId": 2,
-      "quantity": 2,
+      "totalBelanja": 5000000,
+      "status": "success",
+      "tglBelanja": "2020-05-04T16:14:24.020Z",
+      "tglSelesai": "2020-05-04T16:38:45.430Z",
       "id": 1
     },
     {
       "userId": 1,
-      "productId": 1,
-      "quantity": 2,
+      "totalBelanja": 20000000,
+      "status": "success",
+      "tglBelanja": "2020-05-04T16:18:15.120Z",
+      "tglSelesai": "05/05/2020, 08:30:41",
       "id": 2
     },
     {
       "userId": 1,
-      "productId": 3,
-      "quantity": 1,
+      "totalBelanja": 35000000,
+      "status": "success",
+      "tglBelanja": "2020-05-05T01:19:27.781Z",
+      "tglSelesai": "05/05/2020, 08:29:15",
       "id": 3
+    },
+    {
+      "userId": 1,
+      "totalBelanja": 15000000,
+      "status": "pending",
+      "tglBelanja": "2020-05-05T06:20:11.678Z",
+      "tglSelesai": "",
+      "id": 4
     }
   ],
-  "transactions": []
+  "transactionDetails": [
+    {
+      "transactionId": 1,
+      "productId": 1,
+      "price": 5000000,
+      "quantity": 1,
+      "totalPrice": 5000000,
+      "id": 1
+    },
+    {
+      "transactionId": 2,
+      "productId": 3,
+      "price": 20000000,
+      "quantity": 1,
+      "totalPrice": 20000000,
+      "id": 2
+    },
+    {
+      "transactionId": 3,
+      "productId": 2,
+      "price": 15000000,
+      "quantity": 2,
+      "totalPrice": 30000000,
+      "id": 3
+    },
+    {
+      "transactionId": 3,
+      "productId": 1,
+      "price": 5000000,
+      "quantity": 1,
+      "totalPrice": 5000000,
+      "id": 4
+    },
+    {
+      "transactionId": 4,
+      "productId": 2,
+      "price": 15000000,
+      "quantity": 1,
+      "totalPrice": 15000000,
+      "id": 5
+    }
+  ],
+  "wishlists": [
+    {
+      "userId": 1,
+      "productId": 1,
+      "id": 1
+    }
+  ],
+  "history": [
+    {
+      "userId": 1,
+      "totalBelanja": 5000000,
+      "status": "success",
+      "tglBelanja": "2020-05-04T16:16:47.022Z",
+      "tglSelesai": "2020-05-04T16:16:47.022Z",
+      "id": 1
+    },
+    {
+      "userId": 1,
+      "totalBelanja": 35000000,
+      "status": "success",
+      "tglBelanja": "05/05/2020, 08:29:15",
+      "tglSelesai": "05/05/2020, 08:29:15",
+      "id": 2
+    },
+    {
+      "userId": 1,
+      "totalBelanja": 35000000,
+      "status": "success",
+      "tglBelanja": "05/05/2020, 08:29:15",
+      "tglSelesai": "05/05/2020, 08:29:15",
+      "id": 3
+    },
+    {
+      "userId": 1,
+      "totalBelanja": 35000000,
+      "status": "success",
+      "tglBelanja": "05/05/2020, 08:29:15",
+      "tglSelesai": "05/05/2020, 08:29:15",
+      "id": 4
+    },
+    {
+      "userId": 1,
+      "totalBelanja": 20000000,
+      "status": "success",
+      "tglBelanja": "05/05/2020, 08:30:42",
+      "tglSelesai": "05/05/2020, 08:30:42",
+      "id": 5
+    },
+    {
+      "userId": 1,
+      "totalBelanja": 20000000,
+      "status": "success",
+      "tglBelanja": "05/05/2020, 08:30:42",
+      "tglSelesai": "05/05/2020, 08:30:42",
+      "id": 6
+    },
+    {
+      "userId": 1,
+      "totalBelanja": 20000000,
+      "status": "success",
+      "tglBelanja": "05/05/2020, 08:30:42",
+      "tglSelesai": "05/05/2020, 08:30:42",
+      "id": 7
+    }
+  ]
 }

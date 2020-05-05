@@ -62,6 +62,33 @@ class ProductDetails extends React.Component {
         });
     };
 
+    addWishlistHandler = () => {
+        Axios.get(`${API_URL}/wishlists`, {
+            params: {
+                userId: this.props.user.id,
+                productId: this.state.productList.id
+            }
+        })
+            .then(res => {
+                console.log(res)
+                if (res.data.length !== 0) {
+                    swal('Failed', 'Item Already in Wishlist', 'error')
+                } else {
+                    Axios.post(`${API_URL}/wishlists`, {
+                        userId: this.props.user.id,
+                        productId: this.state.productList.id
+                    })
+                        .then(res => {
+                            console.log(res);
+                            swal('Success', 'Item Added To Wishlist', 'success')
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+               }
+            })
+    }
+
     componentDidMount() {
         // const { productList: [] } = this.state;
         Axios.get(`${API_URL}/products/${this.props.match.params.productId}`)
@@ -91,7 +118,7 @@ class ProductDetails extends React.Component {
                         </p>
                         <div className="d-flex flex-row mt-4">
                             <ButtonUI onClick={this.addToCartHandler}>Add To Cart</ButtonUI>
-                            <ButtonUI className="ml-4" type="outlined">Add To Wishlist</ButtonUI>
+                            <ButtonUI className="ml-4" type="outlined" onClick={this.addWishlistHandler}>Add To Wishlist</ButtonUI>
                         </div>
                     </div>
                 </div>

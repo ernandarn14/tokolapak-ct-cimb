@@ -28,7 +28,7 @@ class Navbar extends React.Component {
     searchBarIsFocused: false,
     searchBarInput: "",
     dropdownOpen: false,
-    cartList: []
+    cartList: 0
   };
 
   onFocus = () => {
@@ -48,7 +48,7 @@ class Navbar extends React.Component {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.getItemCarts()
   }
 
@@ -57,16 +57,15 @@ class Navbar extends React.Component {
     Axios.get(`${API_URL}/carts`, {
       params: {
         userId: this.props.user.id,
-        _expand: "product",
       },
     })
       .then((res) => {
         console.log(res.data);
-        res.data.map((val) => {
-          total += val.quantity
-        })
+        // res.data.map((val) => {
+        //   total += val.quantity
+        // })
         this.setState({
-          cartList: total
+          cartList: res.data.length
         })
       })
       .catch((err) => {
@@ -77,7 +76,7 @@ class Navbar extends React.Component {
   renderTotalCart = () => {
     const { cartList } = this.state
     return cartList.map((val) => {
-      return val.quantity
+      return val.productId
     })
   }
 
@@ -126,18 +125,36 @@ class Navbar extends React.Component {
                           Dashboard
                     </Link>
                       </DropdownItem>
-                      <DropdownItem>Members</DropdownItem>
-                      <DropdownItem>Payments</DropdownItem>
+                      <DropdownItem>
+                        <Link
+                          style={{ color: "inherit", textDecoration: "none" }}
+                          to="/admin/member"
+                        >
+                          Members
+                    </Link>
+                      </DropdownItem>
+                      <DropdownItem>
+                        <Link
+                          style={{ color: "inherit", textDecoration: "none" }}
+                          to="/admin/payment"
+                        >
+                          Payments
+                    </Link>
+                      </DropdownItem>
                     </>) : (
                       <>
                         <DropdownItem>
-                          <Link
+                          <Link to="/wishlist"
                             style={{ color: "inherit", textDecoration: "none" }}
                           >
                             Wishlist
                     </Link>
                         </DropdownItem>
-                        <DropdownItem>History</DropdownItem>
+                        <DropdownItem>   <Link to="/history"
+                            style={{ color: "inherit", textDecoration: "none" }}
+                          >
+                            History
+                    </Link></DropdownItem>
                       </>
                     )}
                 </DropdownMenu>
