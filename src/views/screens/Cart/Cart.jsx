@@ -22,8 +22,9 @@ class Cart extends React.Component {
             status: "pending",
             tglBelanja: new Date(),
             tglSelesai: "",
-            methodShipping: "Economy"
         },
+        methodShipping: "Economy",
+        priceShipping: 0,
         modalOpen: false,
         //totalBelanja: 0, 
     }
@@ -174,9 +175,25 @@ class Cart extends React.Component {
                 ]
             });
         }
-
-
     };
+
+    getpriceShipping = () => {
+        let totalPayment = 0
+        const {methodShipping, priceShipping} = this.state
+        this.state.transactionItems.map(val => {
+            this.state.transactionItems.totalBelanja + (val.product.price * val.quantity)
+        })
+        if (methodShipping == "instant"){
+            this.setState({priceShipping: 100000})
+        } else if(methodShipping == "sameday"){
+            this.setState({priceShipping: 50000})
+        } else if (methodShipping == "express"){
+            this.setState({priceShipping: 20000})
+        } else {
+            this.setState({priceShipping: 0})
+        }
+        this.setState({totalPayment =})
+    }
 
     render() {
         return (
@@ -235,10 +252,10 @@ class Cart extends React.Component {
                                 <div className="d-flex flex-row mt-4">
                                     <label>Method Shipping</label>
                                     <select className="custom-text-input pl-3"  onChange={(e) => this.inputHandler(e, "methodShipping", "transactionItems")}>
-                                        <option value="100000">Instant</option>
-                                        <option value="50000">Sameday</option>
-                                        <option value="20000">Express</option>
-                                        <option value="0">Economy</option>
+                                        <option value="instant">Instant</option>
+                                        <option value="sameday">Sameday</option>
+                                        <option value="express">Express</option>
+                                        <option value="economy">Economy</option>
                                     </select>
                                 </div>
                                 <h6 style={{ fontWeight: "bold" }} onChange={(e) => this.inputHandler(e, "methodShipping", "transactionItems")}>Shipping Price : {

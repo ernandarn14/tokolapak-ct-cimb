@@ -8,7 +8,7 @@ import { truncateSync } from 'fs';
 class ReportDashboard extends React.Component {
     state = {
         userList: [],
-        totalPayment: 0,
+        totalPayment: [],
         transactionItems: {
             userId: 0,
             totalBelanja: 0,
@@ -17,11 +17,7 @@ class ReportDashboard extends React.Component {
 
     getDataTransaction = (item) => {
         let total = 0
-        Axios.get(`${API_URL}/transactions`, {
-            params: {
-                status: item
-            }
-        })
+        Axios.get(`${API_URL}/transactions`)
             .then((res) => {
                 console.log(res);
                 res.data.map((val) => {
@@ -58,6 +54,10 @@ class ReportDashboard extends React.Component {
             item[userId].total += totalBelanja
             return item
         }, {})
+    }
+
+    getTotalPayment = () => {
+        this.state.userList.reduce((sum, userList) => sum + userList.totalBelanja, 0)
     }
 
     renderReport = () => {
