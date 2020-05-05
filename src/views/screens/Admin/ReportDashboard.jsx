@@ -2,6 +2,8 @@ import React from 'react'
 import { Table } from 'reactstrap'
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
+import user from '../../../redux/types/user';
+import { truncateSync } from 'fs';
 
 class ReportDashboard extends React.Component {
     state = {
@@ -22,14 +24,19 @@ class ReportDashboard extends React.Component {
         })
             .then((res) => {
                 console.log(res);
-                res.data.reduce((val) => {
+                res.data.map((val) => {
                     total += val.totalBelanja
                 })
+                //let a = 0
+                // for (var i=0; i< res.data.length; i++) {
+                //     a += res.data[userId].totalBelanja;
+                // }
                 this.setState({
                     userList: res.data,
                     transactionItems: {
                         ...this.state.transactionItems,
                         totalBelanja: total,
+                       // totalPayment: a
                     }
                 });
             })
@@ -54,14 +61,17 @@ class ReportDashboard extends React.Component {
     }
 
     renderReport = () => {
+        const {userList} = this.state
+        let total = 0
         return this.state.userList.map((val, idx) => {
             const { userId, totalBelanja, status } = val;
+            //let total = userList.reduce((sum, userList) => sum + userList.totalBelanja, 0);
             if (status == "success") {
                 return (
                     <>
                         <tr>
                             <td>{idx + 1}</td>
-                            <td key={idx}>{userId}</td>
+                            <td>{userId}</td>
                             <td>{ new Intl.NumberFormat("id-ID",
                                         { style: "currency", currency: "IDR" }).format(totalBelanja)}</td>
                         </tr>

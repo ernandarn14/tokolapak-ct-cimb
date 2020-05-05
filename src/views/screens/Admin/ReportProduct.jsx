@@ -36,9 +36,11 @@ class ReportProduct extends React.Component {
     }
 
     renderReport = () => {
+        const {productList} = this.state
         return this.state.productList.map((val, idx) => {
              const {  status } = val;
             const { productId, quantity } = val.transactionDetails[0]
+            let total = productList.reduce((sum, productList) => sum + productList.quantity, 0);
             if (status == "success") {
                 return (
                     <>
