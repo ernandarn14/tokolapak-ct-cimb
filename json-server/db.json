@@ -64,14 +64,7 @@
       "id": 5
     }
   ],
-  "carts": [
-    {
-      "userId": 1,
-      "productId": 2,
-      "quantity": 1,
-      "id": 1
-    }
-  ],
+  "carts": [],
   "transactions": [
     {
       "userId": 1,
@@ -211,28 +204,6 @@
       "tglBelanja": "05/05/2020, 08:30:42",
       "tglSelesai": "05/05/2020, 08:30:42",
       "id": 7
-    }
-  ],
-  "shipping": [
-    {
-      "id": 1,
-      "name": "Instant",
-      "price": 100000
-    },
-    {
-      "id": 2,
-      "name": "Sameday",
-      "price": 50000
-    },
-    {
-      "id": 3,
-      "name": "Express",
-      "price": 20000
-    },
-    {
-      "id": 1,
-      "name": "Economy",
-      "price": 0
     }
   ]
 }

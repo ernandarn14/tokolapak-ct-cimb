@@ -35,12 +35,13 @@ class Cart extends React.Component {
 
     inputHandler = (e, field, form) => {
         let { value } = e.target;
-        this.setState({
-          [form]: {
-            ...this.state[form],
-            [field]: value,
-          },
-        });
+        // this.setState({
+        //   [form]: {
+        //     ...this.state[form],
+        //     [field]: value,
+        //   },
+        // });
+        this.setState({priceShipping: value})
       };
 
     getItemCarts = () => {
@@ -57,14 +58,15 @@ class Cart extends React.Component {
                 res.data.map((val) => {
                     subTotal += val.quantity * val.product.price
                 })
-                totalPrice += subTotal 
+                totalPrice = subTotal + parseInt(this.state.priceShipping)
+               console.log(this.state.priceShipping)
                 this.setState({
                     cartList: res.data, transactionItems: {
                         ...this.state.transactionItems,
                         userId: this.props.user.id,
                         totalBelanja: totalPrice,
                         status: "pending",
-                        tglBelanja: new Date(),
+                        tglBelanja: new Date().toLocaleString('EN-US'),
                         tglSelesai: ""
                     }
                 })
@@ -177,25 +179,6 @@ class Cart extends React.Component {
         }
     };
 
-    getpriceShipping = () => {
-        let totalPayment = 0
-        const {methodShipping, priceShipping} = this.state
-        // this.state.transactionItems.map(val => {
-        //     this.state.transactionItems.totalBelanja + (val.product.price * val.quantity)
-        // })
-        if (methodShipping == "instant"){
-            this.setState({priceShipping: 100000})
-            totalPayment += priceShipping
-        } else if(methodShipping == "sameday"){
-            this.setState({priceShipping: 50000})
-        } else if (methodShipping == "express"){
-            this.setState({priceShipping: 20000})
-        } else {
-            this.setState({priceShipping: 0})
-        }
-        //this.setState({totalPayment =})
-    }
-
     render() {
         return (
             <div className="container py-4">
@@ -252,20 +235,16 @@ class Cart extends React.Component {
                                 } </h6>
                                 <div className="d-flex flex-row mt-4">
                                     <label>Method Shipping</label>
-                                    <select className="custom-text-input pl-3"  onChange={(e) => this.inputHandler(e, "methodShipping", "transactionItems")}>
-                                        <option value="instant">Instant</option>
-                                        <option value="sameday">Sameday</option>
-                                        <option value="express">Express</option>
-                                        <option value="economy">Economy</option>
+                                    <select className="custom-text-input pl-3"  onChange={(e) => this.inputHandler(e)}>
+                                        <option value={100000}>Instant</option>
+                                        <option value={50000}>Sameday</option>
+                                        <option value={20000}>Express</option>
+                                        <option value={0}>Economy</option>
                                     </select>
                                 </div>
-                                <h6 style={{ fontWeight: "bold" }} onChange={(e) => this.inputHandler(e, "methodShipping", "transactionItems")}>Shipping Price : {
+                                <h6 style={{ fontWeight: "bold" }} onChange={(e) => this.inputHandler(e, "methodShipping")}>Shipping Price : {
                                     new Intl.NumberFormat("id-ID",
-                                        { style: "currency", currency: "IDR" }).format(this.state.transactionItems.methodShipping)
-                                } </h6>
-                                <h6 style={{ fontWeight: "bold" }}>Total Payments : {
-                                    new Intl.NumberFormat("id-ID",
-                                        { style: "currency", currency: "IDR" }).format(this.state.transactionItems.totalBelanja)
+                                        { style: "currency", currency: "IDR" }).format(this.state.priceShipping)
                                 } </h6>
 
                             </ModalBody>
