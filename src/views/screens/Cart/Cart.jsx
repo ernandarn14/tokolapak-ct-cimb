@@ -180,11 +180,12 @@ class Cart extends React.Component {
     getpriceShipping = () => {
         let totalPayment = 0
         const {methodShipping, priceShipping} = this.state
-        this.state.transactionItems.map(val => {
-            this.state.transactionItems.totalBelanja + (val.product.price * val.quantity)
-        })
+        // this.state.transactionItems.map(val => {
+        //     this.state.transactionItems.totalBelanja + (val.product.price * val.quantity)
+        // })
         if (methodShipping == "instant"){
             this.setState({priceShipping: 100000})
+            totalPayment += priceShipping
         } else if(methodShipping == "sameday"){
             this.setState({priceShipping: 50000})
         } else if (methodShipping == "express"){
@@ -192,7 +193,7 @@ class Cart extends React.Component {
         } else {
             this.setState({priceShipping: 0})
         }
-        this.setState({totalPayment =})
+        //this.setState({totalPayment =})
     }
 
     render() {
