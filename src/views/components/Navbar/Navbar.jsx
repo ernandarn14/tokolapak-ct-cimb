@@ -188,7 +188,8 @@ class Navbar extends React.Component {
                 <CircleBg>
                   <small style={{ color: "#3C64B1", fontWeight: "bold" }}>
                     {/* {this.renderTotalCart()} */}
-                    {this.state.cartList}
+                    {/* {this.state.cartList} */}
+                    {this.props.user.cartItems}
                   </small>
                 </CircleBg>
               </Link>

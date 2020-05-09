@@ -53,6 +53,7 @@ class Home extends React.Component {
     activeIndex: 0,
     animating: false,
     bestSellerData: [],
+    categoryFilter: ""
   };
 
   renderCarouselItems = () => {
@@ -112,12 +113,8 @@ class Home extends React.Component {
     this.setState({ activeIndex: prevIndex });
   };
 
-  getBestSellerData = (val) => {
-    Axios.get(`${API_URL}/products`, {
-      params: {
-        category: val,
-      }
-    })
+  getBestSellerData = () => {
+    Axios.get(`${API_URL}/products`)
       .then((res) => {
         this.setState({ bestSellerData: res.data });
       })
@@ -130,9 +127,22 @@ class Home extends React.Component {
 
   renderProducts = () => {
     return this.state.bestSellerData.map(val => {
-      const { productName } = val
-     if (productName.toLowerCase().startsWith(this.props.user.textSearch.toLowerCase()))
-        return <ProductCard data={val} key={`bestseller-${val.id}`} className='m-3' />
+      const { productName, category } = val
+      if (productName.toLowerCase().includes(this.props.user.textSearch.toLowerCase()) && category.toLowerCase().includes(this.state.categoryFilter)) {
+        return (
+          <Link
+            style={{ textDecoration: "none", color: "inherit" }}
+            to={`/product/${val.id}`}
+          >
+            <ProductCard
+              key={`bestseller-${val.id}`}
+              data={val}
+              className="m-2"
+            />
+          </Link>
+        )
+      }
+      //return <ProductCard data={val} key={`bestseller-${val.id}`} className='m-3' />
     })
   }
 
@@ -144,19 +154,19 @@ class Home extends React.Component {
     return (
       <div>
         <div className="d-flex justify-content-center flex-row align-items-center my-3">
-        <Link to="/" style={{ color: "inherit" }} onClick={() => this.getBestSellerData()}>
+          <Link to="/" style={{ color: "inherit" }} onClick={() => this.setState({ categoryFilter: "" })}>
             <h6 className="mx-4 font-weight-bold">ALL</h6>
           </Link>
-          <Link to="/" style={{ color: "inherit" }} onClick={() => this.getBestSellerData("Phone")}>
+          <Link to="/" style={{ color: "inherit" }} onClick={() => this.setState({ categoryFilter: "phone" })}>
             <h6 className="mx-4 font-weight-bold">PHONE</h6>
           </Link>
-          <Link to="/" style={{ color: "inherit" }} onClick={() => this.getBestSellerData("Laptop")}>
+          <Link to="/" style={{ color: "inherit" }} onClick={() => this.setState({ categoryFilter: "laptop" })}>
             <h6 className="mx-4 font-weight-bold">LAPTOP</h6>
           </Link>
-          <Link to="/" style={{ color: "inherit" }} onClick={() => this.getBestSellerData("Tab")}>
+          <Link to="/" style={{ color: "inherit" }} onClick={() => this.setState({ categoryFilter: "tab" })}>
             <h6 className="mx-4 font-weight-bold">TAB</h6>
           </Link>
-          <Link to="/" style={{ color: "inherit" }} onClick={() => this.getBestSellerData("Dekstop")}>
+          <Link to="/" style={{ color: "inherit" }} onClick={() => this.setState({ categoryFilter: "dekstop" })}>
             <h6 className="mx-4 font-weight-bold">DESKTOP</h6>
           </Link>
         </div>

@@ -17,7 +17,7 @@ class PaymentDashboard extends React.Component {
     Axios.get(`${API_URL}/transactions`, {
       params: {
         status: val,
-        // _expand: "product",
+        _expand: "user",
         _embed: "transactionDetails",
       },
     })
@@ -45,7 +45,7 @@ class PaymentDashboard extends React.Component {
         quantity,
         totalPrice,
       } = val.transactionDetails[0];
-      if (this.state.activePage == "pending" && status == "pending") {
+      if (this.state.activePage == "pending") {
         return (
           <>
             <tr
@@ -63,7 +63,7 @@ class PaymentDashboard extends React.Component {
                 }
               }}
             >
-              <td>{userId}</td>
+              <td>{val.user.username}</td>
               <td>
                 {new Intl.NumberFormat("id-ID", {
                   style: "currency",
@@ -142,7 +142,7 @@ class PaymentDashboard extends React.Component {
                 }
               }}
             >
-              <td>{userId}</td>
+              <td>{val.user.username}</td>
               <td>
                 {new Intl.NumberFormat("id-ID", {
                   style: "currency",
@@ -203,28 +203,16 @@ class PaymentDashboard extends React.Component {
   confirmPaymentHandler = (id) => {
     Axios.patch(`${API_URL}/transactions/${id}`, {
       status: "success",
-      tglSelesai: this.dateTimeFormat(),
+      tglSelesai: new Date().toLocaleString('EN-US'),
     })
       .then((res) => {
         console.log(res);
-        this.state.paymentList.map((val) => {
-          Axios.post(`${API_URL}/history`, {
-            userId: res.data.userId,
-            totalBelanja: res.data.totalBelanja,
-            status: "success",
-            tglBelanja: this.dateTimeFormat(),
-            tglSelesai: this.dateTimeFormat(),
-          });
-        });
-        // .then(res => {
-        //     console.log(res)
         swal("Success", "Payment Confirmed", "success");
         this.getDataTransaction();
-        // })
       })
       .catch((err) => {
         console.log(err);
-        //swal('Failed', 'Payment Failed to Confirm', 'error')
+        swal('Failed', 'Payment Failed to Confirm', 'error')
       });
   };
 

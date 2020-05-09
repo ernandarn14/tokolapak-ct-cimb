@@ -11,15 +11,16 @@ import { connect } from 'react-redux';
 class History extends React.Component {
     state = {
         data: [],
-        activeData: []
+        activeData: [],
+        dataList: []
     }
 
     getHistoryData = () => {
         Axios.get(`${API_URL}/transactions`, {
             params: {
                 userId: this.props.user.id,
-                // _embed: "products",
-                _embed: "transactionDetails"
+                _embed: "transactionDetails",
+                status: "success"
             },
         })
             .then((res) => {
@@ -30,6 +31,21 @@ class History extends React.Component {
                 console.log(err);
             });
     }
+
+    getTransactionDetails = (transactionId) => {
+        Axios.get(`${API_URL}/transactionDetails`, {
+          params: {
+            transactionId,
+            _expand: "product",
+          },
+        })
+          .then((res) => {
+            this.setState({ dataList: res.data});
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      };
 
     renderHistory = () => {
         return this.state.data.map((val, idx) => {
@@ -80,6 +96,7 @@ class History extends React.Component {
                         this.state.activeData.includes(idx) ? "active" : null
                         } p-3`}>
                         <div className="d-flex justify-content-around align-items-center mt-3">
+                            {/* <img src={val.product.image} /> */}
                             <div className="d-flex">
                                 <div className="d-flex flex-column ml-4 justify-content-center">
                                     <h6>ID Product: {productId}</h6>

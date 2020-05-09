@@ -49,12 +49,25 @@ class App extends React.Component {
     }
   };
 
+  renderRoutes = () => {
+    if (this.props.user.id){
+      return (
+        <>
+        <Route exact path="/cart" component={Cart} />
+            <Route exact path="/wishlist" component={Wishlist} />
+            <Route exact path="/history" component={History} />
+        </>
+      )
+    }
+  }
+
   render() {
     if (this.props.user.cookieChecked) {
       return (
         <>
           <Navbar />
           <Switch>
+          
             <Route exact path="/" component={Home} />
             <Route exact path="/auth" component={AuthScreen} />
             <Route
@@ -62,10 +75,11 @@ class App extends React.Component {
               path="/product/:productId"
               component={ProductDetails}
             />
-            <Route exact path="/cart" component={Cart} />
+            {/* <Route exact path="/cart" component={Cart} />
             <Route exact path="/wishlist" component={Wishlist} />
-            <Route exact path="/history" component={History} />
+            <Route exact path="/history" component={History} /> */}
             {this.renderAdminRoutes()}
+            {this.renderRoutes()}
             <Route path="*" component={PageNotFound} />
           </Switch>
           <div style={{ height: "120px" }} />

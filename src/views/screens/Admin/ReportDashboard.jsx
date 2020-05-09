@@ -8,11 +8,6 @@ import { truncateSync } from 'fs';
 class ReportDashboard extends React.Component {
     state = {
         userList: [],
-        // totalPayment: [],
-        // transactionItems: {
-        //     userId: 0,
-        //     totalBelanja: 0,
-        // },
     }
 
     getDataTransaction = (item) => {
@@ -22,7 +17,6 @@ class ReportDashboard extends React.Component {
             params: {
                 status: "success",
                 _expand: "user",
-                _embed: "transactionDetails"
             }
             })
             .then((res) => {
@@ -39,28 +33,35 @@ class ReportDashboard extends React.Component {
     }
 
     renderReport = () => {
-        const { userList } = this.state
-        let totalPayment = 0
-        //let userArr = []
-        return userList.map((val, idx) => {
-            const { userId, totalBelanja, status, transactionDetails, user  } = val;
-            const {username} = user
+        let userArr = [];
 
-            let userIdx = userList.findIndex(val => val.username==username)
-            //userList[userIdx].totalPayment += totalBelanja
-            if (status == "success") {
-                return (
-                    <>
-                        <tr>
-                            <td>{idx + 1}</td>
-                            <td>{username}</td>
-                            <td key={userId}>{new Intl.NumberFormat("id-ID",
-                                { style: "currency", currency: "IDR" }).format(totalBelanja)}</td>
-                        </tr>
-                    </>
-                )
-            }
-        })
+        this.state.userList.forEach((val) => {
+          let findUserIdx = userArr.findIndex(
+            (user) => user.username === val.user.username
+          );
+    
+          if (findUserIdx !== -1) {
+            // Check apakah user sudah tertampung
+            // Belom ada = -1
+            // !== -1 -> sudah ada
+            userArr[findUserIdx].total += val.totalBelanja;
+          } else {
+            userArr.push({
+              username: val.user.username,
+              total: val.totalBelanja,
+            });
+          }
+        });
+
+        return userArr.map((val) => {
+          return (
+            <tr>
+              <td>{val.username}</td>
+              <td>{new Intl.NumberFormat("id-ID",
+                             { style: "currency", currency: "IDR" }).format(val.total)}</td>
+            </tr>
+          );
+        });
     }
 
 
@@ -73,7 +74,6 @@ class ReportDashboard extends React.Component {
                 <Table>
                     <thead>
                         <tr>
-                            <th>No</th>
                             <th>Username</th>
                             <th>Total Payments</th>
                         </tr>

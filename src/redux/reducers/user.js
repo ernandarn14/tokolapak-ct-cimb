@@ -10,7 +10,8 @@ const init_state = {
   role: "",
   errMsg: "",
   cookieChecked: false,
-  textSearch: ""
+  textSearch: "",
+  cartItems: 0
 };
 
 export default (state = init_state, action) => {
@@ -33,8 +34,10 @@ export default (state = init_state, action) => {
       return { ...init_state, cookieChecked: true };
     case "COOKIE_CHECK":
       return { ...state, cookieChecked: true };
-      case ON_FILTER_SUCCESS:
-        return {...state, cookieChecked:true, textSearch: action.payload}
+    case ON_FILTER_SUCCESS:
+      return { ...state, cookieChecked: true, textSearch: action.payload };
+    case "FILL_CART":
+      return { ...state, cartItems: action.payload };
     default:
       return { ...state };
   }

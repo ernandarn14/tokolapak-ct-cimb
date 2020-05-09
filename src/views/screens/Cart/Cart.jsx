@@ -9,6 +9,8 @@ import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import ButtonUI from "../../components/Button/Button";
 import swal from 'sweetalert'
+import { fillCart } from "../../../redux/actions";
+import { priceFormatter } from "../../../helpers/formatter";
 
 
 
@@ -16,37 +18,20 @@ import swal from 'sweetalert'
 class Cart extends React.Component {
     state = {
         cartList: [],
-        transactionItems: {
-            userId: 0,
-            totalBelanja: 0,
-            status: "pending",
-            tglBelanja: new Date(),
-            tglSelesai: "",
-        },
-        methodShipping: "Economy",
-        priceShipping: 0,
+        methodShipping: "instant",
         modalOpen: false,
-        //totalBelanja: 0, 
     }
 
     componentDidMount() {
         this.getItemCarts()
     }
 
-    inputHandler = (e, field, form) => {
+    inputHandler = (e) => {
         let { value } = e.target;
-        // this.setState({
-        //   [form]: {
-        //     ...this.state[form],
-        //     [field]: value,
-        //   },
-        // });
-        this.setState({priceShipping: value})
-      };
+        this.setState({ methodShipping: value })
+    };
 
     getItemCarts = () => {
-        let subTotal = 0
-        let totalPrice = 0
         Axios.get(`${API_URL}/carts`, {
             params: {
                 userId: this.props.user.id,
@@ -55,20 +40,8 @@ class Cart extends React.Component {
         })
             .then((res) => {
                 console.log(res.data);
-                res.data.map((val) => {
-                    subTotal += val.quantity * val.product.price
-                })
-                totalPrice = subTotal + parseInt(this.state.priceShipping)
-               console.log(this.state.priceShipping)
                 this.setState({
-                    cartList: res.data, transactionItems: {
-                        ...this.state.transactionItems,
-                        userId: this.props.user.id,
-                        totalBelanja: totalPrice,
-                        status: "pending",
-                        tglBelanja: new Date().toLocaleString('EN-US'),
-                        tglSelesai: ""
-                    }
+                    cartList: res.data
                 })
             })
             .catch((err) => {
@@ -77,17 +50,15 @@ class Cart extends React.Component {
     }
 
     renderCarts = () => {
-        let subTotal = 0
         const { cartList } = this.state
         return cartList.map((val, idx) => {
-            subTotal = val.quantity * val.product.price
             return (
                 <tr>
                     <td style={{ verticalAlign: "middle" }}>{idx + 1}</td>
                     <td style={{ verticalAlign: "middle" }}>{val.product.productName}</td>
                     <td style={{ verticalAlign: "middle" }}>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(val.product.price)}</td>
                     <td style={{ verticalAlign: "middle" }}>{val.quantity}</td>
-                    <td style={{ verticalAlign: "middle" }}>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(subTotal)}</td>
+                    <td style={{ verticalAlign: "middle" }}>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(this.renderSubTotalPrice())}</td>
                     <td><img src={val.product.image} style={{ height: "150px", width: "100px", objectFit: "contain" }} /></td>
                     <td style={{ verticalAlign: "middle" }}>
                         <ButtonUI onClick={() => this.deleteCartsItem(val.id)} type="outlined">Delete</ButtonUI>
@@ -111,18 +82,72 @@ class Cart extends React.Component {
             })
     }
 
+    renderSubTotalPrice = () => {
+        let totalPrice = 0;
+
+        this.state.cartList.forEach((val) => {
+            const { quantity, product } = val;
+            const { price } = product;
+
+            totalPrice += quantity * price;
+        });
+
+        return totalPrice;
+    };
+
+    renderShippingPrice = () => {
+        switch (this.state.shipping) {
+            case "instant":
+              return priceFormatter(100000);
+            case "sameday":
+              return priceFormatter(50000);
+            case "express":
+              return priceFormatter(20000);
+            default:
+              return "Free";
+          }
+    };
+
+    renderTotalPrice = () => {
+        let totalPrice = 0;
+
+        this.state.cartList.forEach((val) => {
+            const { quantity, product } = val;
+            const { price } = product;
+
+            totalPrice += quantity * price;
+        });
+
+        let shippingPrice = 0;
+
+        switch (this.state.methodShipping) {
+            case "instant":
+                shippingPrice = 100000;
+                break;
+            case "sameday":
+                shippingPrice = 50000;
+                break;
+            case "express":
+                shippingPrice = 20000;
+                break;
+            default:
+                shippingPrice = 0;
+                break;
+        }
+
+        return totalPrice + shippingPrice;
+    };
+
     renderCheckOut = () => {
         const { cartList } = this.state
-        let subTotal = 0
         return cartList.map((val, idx) => {
-            subTotal = val.quantity * val.product.price
             return (
                 <tr>
                     <td>{idx + 1}</td>
                     <td>{val.product.productName}</td>
                     <td>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(val.product.price)}</td>
                     <td>{val.quantity}</td>
-                    <td>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(subTotal)}</td>
+                    <td>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(this.renderSubTotalPrice())}</td>
                 </tr>
             )
         })
@@ -135,7 +160,13 @@ class Cart extends React.Component {
 
     checkOutHandler = () => {
         const { cartList } = this.state
-        Axios.post(`${API_URL}/transactions`, this.state.transactionItems)
+        Axios.post(`${API_URL}/transactions`, {
+            userId: this.props.user.id,
+            totalBelanja: this.renderTotalPrice(),
+            status: "pending",
+            tglBelanja: new Date().toLocaleString('EN-US'),
+            tglSelesai: ""
+        })
             .then(res => {
                 console.log(res)
                 cartList.map((val) => {
@@ -147,11 +178,16 @@ class Cart extends React.Component {
                         totalPrice: val.product.price * val.quantity
                     })
                 })
+            })
+            .then(res => {
                 cartList.forEach(val => {
                     this.deleteCartsItem(val.id)
                 });
                 swal('Success', 'Transaction Success', 'success')
-                this.setState({ modalOpen: false, cartList: [] })
+                this.setState({ modalOpen: false })
+            })
+            .then((res) => {
+                this.props.fillCart(this.props.user.id);
             })
             .catch(err => {
                 console.log(err)
@@ -201,7 +237,7 @@ class Cart extends React.Component {
                         <div className="d-flex flex-row mt-4 justify-content-between">
                             <h6 style={{ fontWeight: "bold" }}>Total Price : {
                                 new Intl.NumberFormat("id-ID",
-                                    { style: "currency", currency: "IDR" }).format(this.state.transactionItems.totalBelanja)
+                                    { style: "currency", currency: "IDR" }).format(this.renderTotalPrice())
                             } </h6>
                             <ButtonUI className="ml-4" type="contained" onClick={this.toggleModal}>Check Out</ButtonUI>
                         </div>
@@ -229,24 +265,22 @@ class Cart extends React.Component {
                                     </thead>
                                     <tbody>{this.renderCheckOut()}</tbody>
                                 </Table>
-                                <h6 style={{ fontWeight: "bold", textAlign: "right" }}>Total Price : {
-                                    new Intl.NumberFormat("id-ID",
-                                        { style: "currency", currency: "IDR" }).format(this.state.transactionItems.totalBelanja)
-                                } </h6>
                                 <div className="d-flex flex-row mt-4">
                                     <label>Method Shipping</label>
-                                    <select className="custom-text-input pl-3"  onChange={(e) => this.inputHandler(e)}>
-                                        <option value={100000}>Instant</option>
-                                        <option value={50000}>Sameday</option>
-                                        <option value={20000}>Express</option>
-                                        <option value={0}>Economy</option>
+                                    <select className="custom-text-input pl-3" onChange={(e) => this.inputHandler(e)}>
+                                        <option value="instant">Instant</option>
+                                        <option value="sameday">Same Day</option>
+                                        <option value="express">Express</option>
+                                        <option value="economy">Economy</option>
                                     </select>
-                                </div>
-                                <h6 style={{ fontWeight: "bold" }} onChange={(e) => this.inputHandler(e, "methodShipping")}>Shipping Price : {
+                                </div><br />
+                                <h6 style={{ fontWeight: "bold" }} onChange={(e) =>
+                        this.setState({ methodShipping: e.target.value })
+                      }>Shipping Price : {this.renderShippingPrice()} </h6>
+                                <h6 style={{ fontWeight: "bold" }}>Total Price : {
                                     new Intl.NumberFormat("id-ID",
-                                        { style: "currency", currency: "IDR" }).format(this.state.priceShipping)
+                                        { style: "currency", currency: "IDR" }).format(this.renderTotalPrice())
                                 } </h6>
-
                             </ModalBody>
                             <ModalFooter>
                                 <ButtonUI type="contained" onClick={this.checkOutHandler}>Confirm</ButtonUI>
@@ -272,5 +306,9 @@ const mapStateToProps = (state) => {
     };
 };
 
+const mapDispatchToProps = {
+    fillCart
+};
 
-export default connect(mapStateToProps)(Cart);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);

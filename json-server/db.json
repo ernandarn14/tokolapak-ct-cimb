@@ -76,6 +76,12 @@
       "productId": 1,
       "quantity": 1,
       "id": 2
+    },
+    {
+      "userId": 2,
+      "productId": 1,
+      "quantity": 1,
+      "id": 3
     }
   ],
   "transactions": [
@@ -106,10 +112,19 @@
     {
       "userId": 1,
       "totalBelanja": 15000000,
-      "status": "pending",
+      "status": "completed",
       "tglBelanja": "2020-05-05T06:20:11.678Z",
       "tglSelesai": "",
-      "id": 4
+      "id": 4,
+      "completedDate": 1589006442184
+    },
+    {
+      "userId": 2,
+      "totalBelanja": 5100000,
+      "status": "success",
+      "tglBelanja": "5/9/2020, 1:32:47 PM",
+      "tglSelesai": "5/9/2020, 1:50:49 PM",
+      "id": 5
     }
   ],
   "transactionDetails": [
@@ -152,6 +167,14 @@
       "quantity": 1,
       "totalPrice": 15000000,
       "id": 5
+    },
+    {
+      "transactionId": 5,
+      "productId": 1,
+      "price": 5000000,
+      "quantity": 1,
+      "totalPrice": 5000000,
+      "id": 6
     }
   ],
   "wishlists": [

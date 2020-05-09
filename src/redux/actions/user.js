@@ -114,3 +114,22 @@ export const filterHandler = (text) => {
       payload: text,
   }
 }
+
+export const fillCart = (userId) => {
+  return (dispatch) => {
+    Axios.get(`${API_URL}/carts`, {
+      params: {
+        userId,
+      },
+    })
+      .then((res) => {
+        dispatch({
+          type: "FILL_CART",
+          payload: res.data.length,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
